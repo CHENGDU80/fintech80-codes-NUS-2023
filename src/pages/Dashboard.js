@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 import MainCard from 'components/MainCard';
-import { Accordion, AccordionSummary, AccordionDetails, Box, Chip, Grid, Stack, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+  Chip,
+  Grid,
+  Stack,
+  Typography
+  // FormControl,
+  // InputLabel,
+  // Select,
+  // MenuItem
+} from '@mui/material';
 import { withStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { CaretDownOutlined } from '@ant-design/icons';
@@ -20,8 +33,11 @@ import dfMacroSentiment from 'data/df_macro_sent.csv';
 const technologySummary =
   "The technology industry is seeing a surge in activity, with China's tech behemoths Xiaomi and Huawei intensifying their efforts to integrate their diverse products, India proposing a roadmap to facilitate the development and transfer of environmentally sound technology, and Apple hosting its second product event of the season. Reliance Jio has announced that it will not increase consumer tariffs, even with the introduction of 5G technology. Standard Chartered's crypto security firm, Zodia Custody, is launching its services in Hong Kong. Brinc and Hatcher+ have announced their intention to identify, invest in, and support the growth of 300 new climate tech startups driving innovation over the next three years. The Federal Reserve is expected to stand pat at its policy meeting this week, with futures implying a 97% chance of rates staying at 5.25-5.5%. Nasdaq's forecast for 2024 for the capital markets here and abroad has remained optimistic.";
 
-const macroSummary =
-  "The macroeconomic environment is characterized by uncertainty and ambiguity due to the business cycle. The US and China are the two main drivers of the global economy, and their growth could signal a potential expansion in 2024. There is a need for fintechs to transition to a sustainable growth model, and the economic cycle can be used to predict economic events. Inflation is expected to gradually decrease, declining from 8.7 percent in 2022, to 6.9 percent in 2023, and 5.8 percent in 2024. Monetary policy decisions from Japan, Malaysia, and the Bank of England will influence the performance of various financial assets, including gold. Interest rates are rising, leading to a drop in UK household wealth, and Singapore's monetary policy remains appropriately tight. Unemployment is a major issue, with youth unemployment reaching a record high in 2023.";
+const macroSummaryShort =
+  'Uncertainty about the economic outlook and ambiguous data are causing a slowdown in late 2022 and early 2023. Business cycles refer to the rise and fall of economic growth, and monetary policy plays a crucial role in influencing the performance of various financial assets. Inflation trends are expected to gradually decrease, and central banks are under pressure to further tighten their policies to rein in inflation.';
+
+const macroSummaryLong =
+  'The macroeconomic environment is currently in a state of uncertainty due to ambiguous data and a slowdown in late 2022 and early 2023. The US and China are the two locomotives of the global economy, and their accelerating growth could be a sign that the expansion is set to resume in 2024. Business cycles refer to the rise and fall of economic growth that an economy experiences over a period of time, and they are important for economists to predict economic events. Economic growth is distinguished from economic development, with the former referring to economies already experiencing rising per capita incomes.The global economic upswing that began around mid-2016 has become broader and stronger, and inflation is expected to gradually decrease. Monetary policy plays a crucial role in influencing the performance of various financial assets, and it is used to reflate the worldâ€™s third-largest economy. Interest rates have caused a sharp drop in UK household wealth, and the Federal Reserve is expected to make a decision this week on interest rates. Unemployment refers to the state of being without a job, and it is a measure of the percentage of the labor force that is unemployed. Skimpflation is a term used to describe a situation where companies respond to inflation by reducing the quantity of the products they offer.';
 
 const StyledAccordion = withStyles({
   root: {
@@ -60,9 +76,20 @@ const StyledAccordionDetails = withStyles((theme) => ({
   }
 }))(AccordionDetails);
 
-const NewsSummaryAccordion = ({ title, text, sentimentScore, csvFile, initExpanded = false }) => {
+const TypewriterWrapper = ({ text }) => (
+  <Typewriter
+    onInit={(typewriter) => {
+      typewriter.changeDelay(0.01).typeString(text).start();
+    }}
+  />
+);
+
+const NewsSummaryAccordion = ({ title, sentimentScore, csvFile, initExpanded = false, hasMenuSelect = false }) => {
+  const [summaryLength, setSummaryLength] = useState(50);
   const [expanded, setExpanded] = useState(initExpanded);
   const toggleExpanded = () => setExpanded(!expanded);
+
+  // const lengthOfSummaryOptions = [50, 200];
 
   return (
     <StyledAccordion expanded={expanded}>
@@ -84,12 +111,27 @@ const NewsSummaryAccordion = ({ title, text, sentimentScore, csvFile, initExpand
         </div>
       </StyledAccordionSummary>
       <StyledAccordionDetails>
+        {/* {hasMenuSelect && (
+          <FormControl sx={{ m: 2, minWidth: 300 }}>
+            <InputLabel id="single-select-label">Length of Summary</InputLabel>
+            <Select
+              labelId="single-select-label"
+              id="single-select"
+              value={summaryLength}
+              label="Single Select"
+              onChange={(e) => setSummaryLength(e.target.value)}
+            >
+              {lengthOfSummaryOptions.map((option, index) => (
+                <MenuItem key={index} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )} */}
+
         <Box sx={{ pt: 2.25 }}>
-          <Typewriter
-            onInit={(typewriter) => {
-              typewriter.changeDelay(0.01).typeString(text).start();
-            }}
-          />
+          {title == 'Technology' ? <TypewriterWrapper text={technologySummary} /> : <TypewriterWrapper text={macroSummaryShort} />}
         </Box>
         <CSVDataGrid csvFile={csvFile} />
       </StyledAccordionDetails>
@@ -99,9 +141,9 @@ const NewsSummaryAccordion = ({ title, text, sentimentScore, csvFile, initExpand
 
 NewsSummaryAccordion.propTypes = {
   title: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   sentimentScore: PropTypes.number.isRequired,
-  csvFile: PropTypes.string.isRequired
+  csvFile: PropTypes.string.isRequired,
+  initExpanded: PropTypes.bool.isRequired
 };
 
 const CSVDataGrid = ({ csvFile }) => {
@@ -185,7 +227,7 @@ const CSVDataGrid = ({ csvFile }) => {
         pageSizeOptions={[3, 5, 10]}
         disableSelectionOnClick
         sx={{
-          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within, &.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within': {
             outline: 'none !important'
           }
         }}
@@ -213,7 +255,7 @@ const CSVDataGrid = ({ csvFile }) => {
         pageSizeOptions={[3, 5, 10]}
         disableSelectionOnClick
         sx={{
-          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within, &.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within': {
             outline: 'none !important'
           }
         }}
@@ -226,27 +268,27 @@ CSVDataGrid.propTypes = {
   csvFile: PropTypes.string.isRequired
 };
 
-const Companies = () => (
-  <Grid container spacing={5} flexDirection="column">
-    <Grid item>
-      <MainCard contentSX={{ p: 2.25 }}>
-        <Stack spacing={0.5}>
-          <Typography variant="h6" color="textSecondary">
-            {'Macro'}
-          </Typography>
+const Companies = () => {
+  return (
+    <Grid container spacing={5} flexDirection="column">
+      <Grid item>
+        <MainCard contentSX={{ p: 2.25 }}>
+          <Stack spacing={0.5}>
+            <Typography variant="h6" color="textSecondary">
+              {'Macro'}
+            </Typography>
+            <NewsSummaryAccordion title="Macro" sentimentScore={0.25} csvFile={dfMacroSentiment} initExpanded hasMenuSelect />
+          </Stack>
+        </MainCard>
+      </Grid>
 
-          <NewsSummaryAccordion title="Macro" text={macroSummary} sentimentScore={0.25} csvFile={dfMacroSentiment} initExpanded />
-        </Stack>
-      </MainCard>
-    </Grid>
-
-    <Grid item>
-      <MainCard contentSX={{ p: 2.25 }}>
-        <Stack spacing={0.5}>
-          <Typography variant="h6" color="textSecondary">
-            {'Industry'}
-          </Typography>
-          {/* 
+      <Grid item>
+        <MainCard contentSX={{ p: 2.25 }}>
+          <Stack spacing={0.5}>
+            <Typography variant="h6" color="textSecondary">
+              {'Industry'}
+            </Typography>
+            {/* 
           <NewsSummaryAccordion title="Consumer" text={consumerSummary} sentimentScore={0.43} csvFile={dfIndustryConsumerSentiment} />
           <NewsSummaryAccordion
             title="Pharmaceuticals"
@@ -254,17 +296,12 @@ const Companies = () => (
             sentimentScore={0.88}
             csvFile={dfIndustryPharmaSentiment} 
             />*/}
-          <NewsSummaryAccordion
-            title="Technology"
-            text={technologySummary}
-            sentimentScore={0.71}
-            csvFile={dfIndustryTechSentiment}
-            initExpanded
-          />
-        </Stack>
-      </MainCard>
+            <NewsSummaryAccordion title="Technology" sentimentScore={0.71} csvFile={dfIndustryTechSentiment} initExpanded />
+          </Stack>
+        </MainCard>
+      </Grid>
     </Grid>
-  </Grid>
-);
+  );
+};
 
 export default Companies;

@@ -19,11 +19,7 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <Configurations />
-    },
-    {
-      path: 'config',
-      element: <Configurations />
+      element: <Portfolio />
     },
     {
       path: 'portfolio',
@@ -40,6 +36,10 @@ const MainRoutes = {
     {
       path: 'action',
       element: <Action />
+    },
+    {
+      path: 'config',
+      element: <Configurations />
     }
   ]
 };

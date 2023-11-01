@@ -40,7 +40,7 @@ const dashboard = {
     },
     {
       id: 'action',
-      title: 'Action',
+      title: 'Actionable Suggestions',
       type: 'item',
       url: '/action',
       icon: icons.FundProjectionScreenOutlined

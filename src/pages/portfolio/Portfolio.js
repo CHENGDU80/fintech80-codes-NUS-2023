@@ -66,7 +66,7 @@ const PortfolioPage = () => {
         rowsPerPageOptions={[5, 10, 20]}
         getRowId={(row) => row.name + row.country}
         sx={{
-          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within, &.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within': {
             outline: 'none !important'
           }
         }}

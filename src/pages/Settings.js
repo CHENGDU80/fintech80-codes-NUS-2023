@@ -98,7 +98,7 @@ const ConfigurationsPage = () => {
           </div>
 
           <div>
-            <Link to="/dashboard">
+            <Link to="/portfolio">
               <Button>
                 <span>Save</span>
               </Button>
