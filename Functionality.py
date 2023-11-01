@@ -8,7 +8,7 @@
 
 import os
 import pandas as pd
-#os.environ["OPENAI_API_KEY"]='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'
+
 import pandas as pd
 from langchain import OpenAI, PromptTemplate, LLMChain
 from langchain.text_splitter import CharacterTextSplitter
@@ -57,7 +57,7 @@ import requests
 # In[ ]:
 
 
-os.environ["OPENAI_API_KEY"]='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'
+os.environ["OPENAI_API_KEY"]='key_hide'
 llm = OpenAI(temperature=0)
 
 
